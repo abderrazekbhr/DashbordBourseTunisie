@@ -3,6 +3,7 @@ from dash.dash_table import DataTable
 import plotly.express as px
 import pandas as pd
 import pathlib
+import os
 
 # Read all sectors dynamically
 sector_paths = list(pathlib.Path('data').glob('*.xlsx'))
