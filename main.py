@@ -25,6 +25,7 @@ formula_titles = {
 }
 app = Dash(__name__)
 app.title = 'Dashboard'
+server = app.server   # VERY IMPORTANT for gunicorn
 
 app.layout = html.Div([
     html.H1(children='Dashboard des entreprises par secteur dans la bourse de Tunis',
@@ -114,4 +115,5 @@ def update_graph(value):
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
