@@ -75,7 +75,7 @@ def update_graph(value):
     dff = data_sectors[value]
     id_column = dff.columns[0]
     # Pass to percentage
-    dff.iloc[:, 1:] = dff.iloc[:, 1:].apply(lambda x: x * 100, axis=1)
+    #dff.iloc[:, 1:] = dff.iloc[:, 1:].apply(lambda x: x * 100, axis=1)
 
     # Melt the dataframe
     dff_melted = dff.melt(
