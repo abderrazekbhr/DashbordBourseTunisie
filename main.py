@@ -41,9 +41,36 @@ app.layout = html.Div([
             id='data-table',
             columns=[{"name": formula_titles[col], "id": col}
                      for col in data_sectors[sectors[0]].columns],
-            style_table={'overflowX': 'auto'},
-            style_cell={'textAlign': 'left', 'padding': '5px'},
-            style_header={'backgroundColor': 'lightgrey', 'fontWeight': 'bold'}
+            style_table={
+                'overflowX': 'auto',
+                'width': '60%',
+                'whiteSpace': 'normal'  # This enables text wrapping
+            },
+            style_cell={
+                'textAlign': 'left',
+                'padding': '5px 10px',
+                # Note the capital W (correct property name)
+                'maxWidth': '100px',
+                'whiteSpace': 'normal',  # Enable wrapping
+                'textOverflow': 'ellipsis',
+                'overflow': 'hidden',
+                'height': 'auto',  # Allow row height to adjust
+                'minWidth': '100px'  # Set minimum width
+            },
+            style_header={
+                'backgroundColor': 'lightgrey',
+                'fontWeight': 'bold',
+                'whiteSpace': 'normal'  # Also enable wrapping for headers
+            },
+            style_data={  # Additional style for data cells
+                'whiteSpace': 'normal',
+                'height': 'auto'
+            },
+            css=[{
+                'selector': '.dash-cell div.dash-cell-value',
+                'rule': 'display: inline; white-space: normal;'  # Force wrapping
+            }],
+            fixed_rows={'headers': True},
         ),
         html.Div(
             [
@@ -71,16 +98,21 @@ app.layout = html.Div([
      Output('data-table', 'data')],
     Input('dropdown-selection', 'value')
 )
-def update_graph(value:str):
+def update_graph(value: str):
     if not value:
         return {}, []
     dff = data_sectors[value]
     id_column = dff.columns[0]
 
+    # Convert the percentage columns to float
+    for col in dff.columns[1:]:
+        dff[col] = dff[col].astype(str).str.replace(
+            '%', '').astype(float).round(2)
     # Melt the dataframe
     dff_melted = dff.melt(
         id_vars=[id_column], var_name='Metric', value_name='Value'
     )
+
     dff_melted = dff_melted.rename(columns=formula_titles)
 
     # Create figure
