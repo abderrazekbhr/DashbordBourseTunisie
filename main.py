@@ -71,7 +71,9 @@ app.layout = html.Div([
      Output('data-table', 'data')],
     Input('dropdown-selection', 'value')
 )
-def update_graph(value):
+def update_graph(value:str):
+    if not value:
+        return {}, []
     dff = data_sectors[value]
     id_column = dff.columns[0]
 
